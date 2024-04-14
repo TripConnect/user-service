@@ -28,7 +28,7 @@ type Token = {
 
 type SignInResponse = {
     id: string;
-    avatar: string;
+    avatar: string | null;
     username: string;
     displayName: string;
     token: Token;
@@ -39,8 +39,8 @@ async function signIn(call: any, callback: any) {
         let { username, password } = call.request;
         let user = await User.findOne({ where: { username } });
         if (!user) throw new Error("Authorization failed");
-
-        let userCredential = await UserCredential.findOne({ where: { id: user.id } });
+        
+        let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
         const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
         if (!isMatchedPassword) throw new Error("Authorization failed");
 
@@ -50,7 +50,7 @@ async function signIn(call: any, callback: any) {
                 username: user.username,
                 credential: userCredential.credential,
             },
-            process.env.SECRET_KEY || ""
+            process.env.JWT_SECRET_KEY || ""
         );
         let refreshToken = "";
 
@@ -64,9 +64,10 @@ async function signIn(call: any, callback: any) {
                 refreshToken,
             },
         }
+
         callback(null, signInResponse);
-    } catch (err) {
-        logger.error(err);
+    } catch (err: any) {
+        logger.error(err.message);
         callback(err, null);
     }
 }

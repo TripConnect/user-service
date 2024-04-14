@@ -1,0 +1,15 @@
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of null (reading 'credential')"}
+{"level":"error","message":"Cannot read properties of null (reading 'credential')"}
+{"level":"error","message":"Cannot read properties of null (reading 'credential')"}
+{"level":"error","message":"Authorization failed"}
+{"level":"error","message":"Authorization failed"}
+{"level":"error","message":"Authorization failed"}
+{"level":"error","message":"Authorization failed"}
+{"level":"error","message":"secretOrPrivateKey must have a value"}
+{"level":"error","message":"secretOrPrivateKey must have a value"}
+{"level":"error","message":"secretOrPrivateKey must have a value"}
