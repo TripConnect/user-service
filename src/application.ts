@@ -1,4 +1,5 @@
 import 'dotenv/config';
+const fs = require('fs');
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 const grpc = require('@grpc/grpc-js');
@@ -9,9 +10,10 @@ import UserCredential from './database/models/user_credential';
 
 import logger from './utils/logging';
 
-const PROTO_PATH = 'src/protos/application.proto';
+const LOCAL_PROTO_PATH = 'src/protos/schema.proto';
+
 let packageDefinition = protoLoader.loadSync(
-    PROTO_PATH,
+    LOCAL_PROTO_PATH,
     {
         keepCase: true,
         longs: String,
@@ -19,7 +21,7 @@ let packageDefinition = protoLoader.loadSync(
         defaults: true,
         oneofs: true
     });
-let user_proto = grpc.loadPackageDefinition(packageDefinition).user_service;
+let backendProto = grpc.loadPackageDefinition(packageDefinition).backend;
 
 type Token = {
     accessToken: string;
@@ -39,7 +41,7 @@ async function signIn(call: any, callback: any) {
         let { username, password } = call.request;
         let user = await User.findOne({ where: { username } });
         if (!user) throw new Error("Authorization failed");
-        
+
         let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
         const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
         if (!isMatchedPassword) throw new Error("Authorization failed");
@@ -75,8 +77,8 @@ async function signIn(call: any, callback: any) {
 const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
-    var server = new grpc.Server();
-    server.addService(user_proto.User.service, { signIn: signIn });
+    let server = new grpc.Server();
+    server.addService(backendProto.User.service, { signIn: signIn });
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
             return console.error(err);
