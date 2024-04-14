@@ -10,10 +10,8 @@ import UserCredential from './database/models/user_credential';
 
 import logger from './utils/logging';
 
-const LOCAL_PROTO_PATH = 'src/protos/schema.proto';
-
 let packageDefinition = protoLoader.loadSync(
-    LOCAL_PROTO_PATH,
+    process.env.PROTO_URL,
     {
         keepCase: true,
         longs: String,
