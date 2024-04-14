@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: service
+      MYSQL_USER: service
+      MYSQL_PASSWORD: service
+      MYSQL_DATABASE: user-service
+    ports:
+      - "3306:3306"
