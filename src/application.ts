@@ -76,6 +76,16 @@ async function signIn(call: any, callback: any) {
 async function signUp(call: any, callback: any) {
     try {
         let { username, password, displayName, avatarURL } = call.request;
+
+        let existUser = await User.findOne({where: { username }});
+        if (existUser) {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                message: 'Invalid argument provided'
+            });
+            return;
+        }
+
         const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(password, salt);
 
