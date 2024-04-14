@@ -13,3 +13,5 @@
 {"level":"error","message":"secretOrPrivateKey must have a value"}
 {"level":"error","message":"secretOrPrivateKey must have a value"}
 {"level":"error","message":"secretOrPrivateKey must have a value"}
+{"level":"error","message":"notNull Violation: User.id cannot be null"}
+{"level":"error","message":"secretOrPrivateKey must have a value"}

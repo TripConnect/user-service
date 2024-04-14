@@ -1,6 +1,7 @@
 import 'dotenv/config';
 const fs = require('fs');
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
@@ -26,7 +27,7 @@ type Token = {
     refreshToken: string;
 }
 
-type SignInResponse = {
+type AuthPayload = {
     id: string;
     avatar: string | null;
     username: string;
@@ -54,7 +55,7 @@ async function signIn(call: any, callback: any) {
         );
         let refreshToken = "";
 
-        let signInResponse: SignInResponse = {
+        let signInResponse: AuthPayload = {
             id: user.id,
             username: user.username,
             displayName: user.display_name,
@@ -72,11 +73,58 @@ async function signIn(call: any, callback: any) {
     }
 }
 
+async function signUp(call: any, callback: any) {
+    try {
+        let { username, password, displayName, avatarURL } = call.request;
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        let user = await User.create({
+            id: uuidv4(),
+            username,
+            display_name: displayName,
+            avatar: avatarURL || null,
+            created_at: new Date(),
+            updated_at: new Date(),
+        });
+
+        let userCredential = await UserCredential.create({
+            user_id: user.id,
+            credential: hashedPassword,
+        });
+
+        let accessToken = jwt.sign(
+            {
+                user_id: user.id,
+                username: user.username,
+                credential: userCredential.credential,
+            },
+            process.env.JWT_SECRET_KEY || ""
+        );
+
+        let signUpResponse: AuthPayload = {
+            id: user.id,
+            username: user.username,
+            displayName: user.display_name,
+            avatar: user.avatar,
+            token: {
+                accessToken,
+                refreshToken: "",
+            },
+        };
+
+        callback(null, signUpResponse);
+    } catch (err: any) {
+        logger.error(err.message);
+        callback(err, null);
+    }
+}
+
 const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
     let server = new grpc.Server();
-    server.addService(backendProto.User.service, { signIn: signIn });
+    server.addService(backendProto.User.service, { signIn: signIn, signUp: signUp });
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
             return console.error(err);
