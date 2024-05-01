@@ -2,7 +2,6 @@ import 'dotenv/config';
 const fs = require('fs');
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
-import jwt from 'jsonwebtoken';
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
@@ -10,6 +9,8 @@ import User from './database/models/user';
 import UserCredential from './database/models/user_credential';
 
 import logger from './utils/logging';
+import { getAccessToken } from './utils/jwt';
+import { Op } from 'sequelize';
 
 let packageDefinition = protoLoader.loadSync(
     process.env.PROTO_URL,
@@ -45,14 +46,7 @@ async function signIn(call: any, callback: any) {
         const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
         if (!isMatchedPassword) throw new Error("Authorization failed");
 
-        let accessToken = jwt.sign(
-            {
-                user_id: user.id,
-                username: user.username,
-                credential: userCredential.credential,
-            },
-            process.env.JWT_SECRET_KEY || ""
-        );
+        let accessToken = getAccessToken(user);
         let refreshToken = "";
 
         let signInResponse: UserInfo = {
@@ -103,14 +97,7 @@ async function signUp(call: any, callback: any) {
             credential: hashedPassword,
         });
 
-        let accessToken = jwt.sign(
-            {
-                user_id: user.id,
-                username: user.username,
-                credential: userCredential.credential,
-            },
-            process.env.JWT_SECRET_KEY || ""
-        );
+        let accessToken = getAccessToken(user);
 
         let signUpResponse: UserInfo = {
             id: user.id,
@@ -156,12 +143,37 @@ async function findUser(call: any, callback: any) {
 
 }
 
+async function searchUser(call: any, callback: any) {
+    let { term } = call.request;
+    try {
+        let users = await User.findAll({
+            where: {
+                display_name: { [Op.like]: `%${term}%` }
+            }
+        });
+        let usersResponse = {
+            users: users.map((user: { [key: string]: any; }) => ({
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+                displayName: user.display_name,
+                token: null,
+            })),
+        };
+
+        callback(null, usersResponse);
+    } catch (err: any) {
+        logger.error(err.message);
+        callback(err, null);
+    }
+}
+
 
 const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
     let server = new grpc.Server();
-    server.addService(backendProto.User.service, { signIn, signUp, findUser });
+    server.addService(backendProto.User.service, { signIn, signUp, findUser, searchUser });
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
             return logger.error(err);
