@@ -27,12 +27,12 @@ type Token = {
     refreshToken: string;
 }
 
-type AuthPayload = {
+type UserInfo = {
     id: string;
     avatar: string | null;
     username: string;
     displayName: string;
-    token: Token;
+    token: Token | null;
 }
 
 async function signIn(call: any, callback: any) {
@@ -55,7 +55,7 @@ async function signIn(call: any, callback: any) {
         );
         let refreshToken = "";
 
-        let signInResponse: AuthPayload = {
+        let signInResponse: UserInfo = {
             id: user.id,
             username: user.username,
             displayName: user.display_name,
@@ -77,7 +77,7 @@ async function signUp(call: any, callback: any) {
     try {
         let { username, password, displayName, avatarURL } = call.request;
 
-        let existUser = await User.findOne({where: { username }});
+        let existUser = await User.findOne({ where: { username } });
         if (existUser) {
             callback({
                 code: grpc.status.INVALID_ARGUMENT,
@@ -112,7 +112,7 @@ async function signUp(call: any, callback: any) {
             process.env.JWT_SECRET_KEY || ""
         );
 
-        let signUpResponse: AuthPayload = {
+        let signUpResponse: UserInfo = {
             id: user.id,
             username: user.username,
             displayName: user.display_name,
@@ -130,16 +130,43 @@ async function signUp(call: any, callback: any) {
     }
 }
 
+async function findUser(call: any, callback: any) {
+    try {
+        let { userId } = call.request;
+        let user = await User.findOne({ where: { id: userId } });
+        if (!user) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: 'User not found'
+            });
+            return;
+        }
+        let userResponse: UserInfo = {
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+            displayName: user.display_name,
+            token: null,
+        };
+        callback(null, userResponse);
+    } catch (error: any) {
+        logger.error(error.message);
+        callback(error, null);
+    }
+
+}
+
+
 const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
     let server = new grpc.Server();
-    server.addService(backendProto.User.service, { signIn: signIn, signUp: signUp });
+    server.addService(backendProto.User.service, { signIn, signUp, findUser });
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
-            return console.error(err);
+            return logger.error(err);
         }
-        console.log(`gRPC listening on ${port}`)
+        logger.info(`gRPC listening on ${port}`);
     });
 }
 

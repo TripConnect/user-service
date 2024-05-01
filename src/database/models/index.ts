@@ -1,5 +1,7 @@
 'use strict';
 
+import logger from "../../utils/logging";
+
 const Sequelize = require('sequelize');
 const configs = require("./../config/config.js");
 const env = process.env.NODE_ENV || 'development';
@@ -13,9 +15,9 @@ db.sequelize = sequelize;
 (async () => {
     try {
         await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        logger.info('Connection has been established successfully.');
     } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        logger.error('Unable to connect to the database:', error);
     }
 })();
 
