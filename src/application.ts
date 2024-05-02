@@ -28,11 +28,11 @@ async function signIn(call: any, callback: any) {
     try {
         let { username, password } = call.request;
         let user = await User.findOne({ where: { username } });
-        if (!user) throw new Error("Authorization failed");
+        if (!user) throw new Error("User not found");
 
         let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
         const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
-        if (!isMatchedPassword) throw new Error("Authorization failed");
+        if (!isMatchedPassword) throw new Error("Password incorrect");
 
         let accessToken = getAccessToken(user);
         let refreshToken = "";
@@ -53,7 +53,10 @@ async function signIn(call: any, callback: any) {
         callback(null, signInResponse);
     } catch (err: any) {
         logger.error(err.message);
-        callback(err, null);
+        callback({
+            code: grpc.status.INVALID_ARGUMENT,
+            message: 'Authorization failed'
+        });
     }
 }
 
