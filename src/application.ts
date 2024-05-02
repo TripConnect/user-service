@@ -11,6 +11,7 @@ import UserCredential from './database/models/user_credential';
 import logger from './utils/logging';
 import { getAccessToken } from './utils/jwt';
 import { Op } from 'sequelize';
+import { AuthPayload, UserInfo } from './utils/types';
 
 let packageDefinition = protoLoader.loadSync(
     process.env.PROTO_URL,
@@ -22,19 +23,6 @@ let packageDefinition = protoLoader.loadSync(
         oneofs: true
     });
 let backendProto = grpc.loadPackageDefinition(packageDefinition).backend;
-
-type Token = {
-    accessToken: string;
-    refreshToken: string;
-}
-
-type UserInfo = {
-    id: string;
-    avatar: string | null;
-    username: string;
-    displayName: string;
-    token: Token | null;
-}
 
 async function signIn(call: any, callback: any) {
     try {
@@ -49,11 +37,13 @@ async function signIn(call: any, callback: any) {
         let accessToken = getAccessToken(user);
         let refreshToken = "";
 
-        let signInResponse: UserInfo = {
-            id: user.id,
-            username: user.username,
-            displayName: user.display_name,
-            avatar: user.avatar,
+        let signInResponse: AuthPayload = {
+            userInfo: {
+                id: user.id,
+                username: user.username,
+                displayName: user.display_name,
+                avatar: user.avatar,
+            },
             token: {
                 accessToken,
                 refreshToken,
@@ -99,11 +89,13 @@ async function signUp(call: any, callback: any) {
 
         let accessToken = getAccessToken(user);
 
-        let signUpResponse: UserInfo = {
-            id: user.id,
-            username: user.username,
-            displayName: user.display_name,
-            avatar: user.avatar,
+        let signUpResponse: AuthPayload = {
+            userInfo: {
+                id: user.id,
+                username: user.username,
+                displayName: user.display_name,
+                avatar: user.avatar,
+            },
             token: {
                 accessToken,
                 refreshToken: "",
@@ -133,7 +125,6 @@ async function findUser(call: any, callback: any) {
             username: user.username,
             avatar: user.avatar,
             displayName: user.display_name,
-            token: null,
         };
         callback(null, userResponse);
     } catch (error: any) {
@@ -157,7 +148,6 @@ async function searchUser(call: any, callback: any) {
                 username: user.username,
                 avatar: user.avatar,
                 displayName: user.display_name,
-                token: null,
             })),
         };
 
