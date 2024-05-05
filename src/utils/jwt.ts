@@ -5,7 +5,7 @@ import User from '../database/models/user';
 export function getAccessToken(user: typeof User): string {
     let accessToken = jwt.sign(
         {
-            user_id: user.id,
+            userId: user.id,
             username: user.username,
             avatar: user.avatar,
         },

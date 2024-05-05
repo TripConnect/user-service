@@ -138,13 +138,31 @@ async function findUser(call: any, callback: any) {
 }
 
 async function searchUser(call: any, callback: any) {
-    let { term } = call.request;
+    let { term, userIds } = call.request;
+    let users = [];
+
     try {
-        let users = await User.findAll({
-            where: {
-                display_name: { [Op.like]: `%${term}%` }
-            }
-        });
+        if(userIds.length > 0) {
+            users = await User.findAll({
+                where: {
+                    id: { [Op.in]: userIds }
+                }
+            });
+        }
+        else if(term.length > 0) {
+            users = await User.findAll({
+                where: {
+                    display_name: { [Op.like]: `%${term}%` }
+                }
+            });
+        } else {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                message: 'Invalid argument'
+            });
+            return;
+        }
+        
         let usersResponse = {
             users: users.map((user: { [key: string]: any; }) => ({
                 id: user.id,
