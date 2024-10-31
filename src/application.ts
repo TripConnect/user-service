@@ -1,7 +1,8 @@
 import 'dotenv/config';
-const fs = require('fs');
-import bcrypt from "bcrypt";
+
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from "bcrypt";
+import { Op } from 'sequelize';
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
@@ -10,11 +11,10 @@ import UserCredential from './database/models/user_credential';
 
 import logger from './utils/logging';
 import { getAccessToken } from './utils/jwt';
-import { Op } from 'sequelize';
 import { AuthPayload, UserInfo } from './utils/types';
 
 let packageDefinition = protoLoader.loadSync(
-    process.env.PROTO_URL,
+    require.resolve('common-utils/protos/backend.proto'),
     {
         keepCase: true,
         longs: String,
@@ -138,31 +138,32 @@ async function findUser(call: any, callback: any) {
 }
 
 async function searchUser(call: any, callback: any) {
-    let { term, userIds } = call.request;
+    const DEFAULT_PAGE_SIZE = 100;
+    const DEFAULT_PAGE_NUMBER = 1;
+    let { term, userIds, pageNumber, pageSize } = call.request;
+    pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
+    pageSize = pageSize || DEFAULT_PAGE_SIZE;
+
     let users = [];
 
     try {
-        if(userIds.length > 0) {
+        if (userIds.length > 0) {
             users = await User.findAll({
                 where: {
                     id: { [Op.in]: userIds }
                 }
             });
         }
-        else if(term.length > 0) {
+        else {
             users = await User.findAll({
                 where: {
                     display_name: { [Op.like]: `%${term}%` }
-                }
+                },
+                limit: pageSize,
+                offset: (pageNumber - 1) * pageSize,
             });
-        } else {
-            callback({
-                code: grpc.status.INVALID_ARGUMENT,
-                message: 'Invalid argument'
-            });
-            return;
         }
-        
+
         let usersResponse = {
             users: users.map((user: { [key: string]: any; }) => ({
                 id: user.id,
