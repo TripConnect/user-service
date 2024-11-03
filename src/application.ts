@@ -137,35 +137,43 @@ async function findUser(call: any, callback: any) {
 
 }
 
+async function getUsers(call: any, callback: any) {
+    try {
+        let { userIds } = call.request;
+        let users = await User.findAll({ where: { id: { [Op.in]: userIds } } });
+        let usersResponse: { users: UserInfo[] } = {
+            users: users.map((user: any) => ({
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+                displayName: user.display_name,
+            })),
+        }
+        callback(null, usersResponse);
+    } catch (err: any) {
+        logger.error(err.message);
+        callback(err, null);
+    }
+}
+
 async function searchUser(call: any, callback: any) {
     const DEFAULT_PAGE_SIZE = 100;
     const DEFAULT_PAGE_NUMBER = 1;
-    let { term, userIds, pageNumber, pageSize } = call.request;
+    let { term, pageNumber, pageSize } = call.request;
     pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
     pageSize = pageSize || DEFAULT_PAGE_SIZE;
 
-    let users = [];
-
     try {
-        if (userIds.length > 0) {
-            users = await User.findAll({
-                where: {
-                    id: { [Op.in]: userIds }
-                }
-            });
-        }
-        else {
-            users = await User.findAll({
-                where: {
-                    display_name: { [Op.like]: `%${term}%` }
-                },
-                limit: pageSize,
-                offset: (pageNumber - 1) * pageSize,
-            });
-        }
+        let users = await User.findAll({
+            where: {
+                display_name: { [Op.like]: `%${term}%` }
+            },
+            limit: pageSize,
+            offset: (pageNumber - 1) * pageSize,
+        });
 
-        let usersResponse = {
-            users: users.map((user: { [key: string]: any; }) => ({
+        let usersResponse: { users: UserInfo[] } = {
+            users: users.map((user: any) => ({
                 id: user.id,
                 username: user.username,
                 avatar: user.avatar,
@@ -185,7 +193,13 @@ const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
     let server = new grpc.Server();
-    server.addService(backendProto.User.service, { signIn, signUp, findUser, searchUser });
+    server.addService(backendProto.User.service, {
+        signIn,
+        signUp,
+        findUser,
+        getUsers,
+        searchUser,
+    });
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
             return logger.error(err);
