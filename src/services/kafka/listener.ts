@@ -4,9 +4,9 @@ import KafkaInstance from "../kafka/index";
 import logger from "../../utils/logging";
 
 type TopicResolver = {
-    topic: string,
     groupId: string,
-    resolver: Function,
+    topic: string,
+    resolver: (message: Record<string, string>) => Promise<void>,
 }
 
 class KafkaListener {
@@ -19,7 +19,7 @@ class KafkaListener {
             await consumer.subscribe({ topic: resolver.topic });
             await consumer.run({
                 eachMessage: async (payload: ConsumerEachMessagePayload) => {
-                    let message = JSON.parse(payload.message.value!.toString() as string);
+                    let message = JSON.parse(payload.message.value!.toString()) as Record<string, string>;
                     await resolver.resolver(message);
                 },
             });
@@ -31,7 +31,7 @@ let resolver: TopicResolver[] = [
     {
         groupId: 'user-service-signout',
         topic: 'user-signout',
-        resolver: async (message: any) => {
+        resolver: async (message) => {
             logger.debug(message);
         },
     }
