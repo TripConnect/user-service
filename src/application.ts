@@ -5,6 +5,7 @@ const protoLoader = require('@grpc/proto-loader');
 
 import logger from './utils/logging';
 import * as rpcImplementations from './rpc';
+import { Consumer, ConsumerEachMessagePayload, Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 
 let packageDefinition = protoLoader.loadSync(
     require.resolve('common-utils/protos/backend.proto'),
@@ -30,4 +31,22 @@ function start() {
     });
 }
 
-start();
+// start();
+
+(async function () {
+    const kafka = new Kafka({
+        clientId: 'user-service',
+        brokers: ['localhost:9092'],
+        logLevel: KafkaLogLevel.ERROR
+    });
+
+    const consumer: Consumer = kafka.consumer({ groupId: 'user-service-consumer' });
+    await consumer.connect();
+    await consumer.subscribe({ topic: 'user-signout', fromBeginning: true });
+    await consumer.run({
+        eachMessage: async (payload: ConsumerEachMessagePayload) => {
+            console.log('----------------------------------------------------');
+            console.log(payload.message.value?.toString());
+        },
+    });
+})();
