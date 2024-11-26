@@ -1,4 +1,4 @@
-import { Kafka, logLevel as KafkaLogLevel } from "kafkajs";
+import { Kafka, logLevel as KafkaLogLevel, Producer } from "kafkajs";
 
 export default new Kafka({
     clientId: 'user-service',
