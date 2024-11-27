@@ -30,8 +30,8 @@ class KafkaListener {
 
 let resolver: TopicResolver[] = [
     {
-        groupId: 'user-service-signout',
-        topic: 'user-signout',
+        groupId: 'user-service-2fa',
+        topic: 'user_updated_for_twofa',
         resolver: async ({ resourceId }) => {
             await User.update(
                 { enabled_2fa: true },
