@@ -28,6 +28,11 @@ const User = db.sequelize.define('User', {
         type: DataTypes.DATE,
         allowNull: false
     },
+    enabled_2fa: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+    }
 }, {
     tableName: 'user',
     timestamps: false,

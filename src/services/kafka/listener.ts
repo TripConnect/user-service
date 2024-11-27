@@ -2,6 +2,7 @@ import { ConsumerEachMessagePayload, Kafka } from "kafkajs";
 
 import KafkaInstance from "../kafka/index";
 import logger from "../../utils/logging";
+import User from "../../database/models/user";
 
 type TopicResolver = {
     groupId: string,
@@ -31,8 +32,12 @@ let resolver: TopicResolver[] = [
     {
         groupId: 'user-service-signout',
         topic: 'user-signout',
-        resolver: async (message) => {
-            logger.debug(message);
+        resolver: async ({ resourceId }) => {
+            await User.update(
+                { enabled_2fa: true },
+                { where: { id: resourceId } }
+            );
+            logger.debug({ message: 'enabled 2fa successfully', resourceId });
         },
     }
 ]
