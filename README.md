@@ -1,14 +1,19 @@
-# Database setup
-Setup for development individually:
-```sh
-cd tools
-docker-compose up
-```
-Note: Should setup follow the `infra-specs` steps.  
+# Introduction:
+The micro-service for user related functions
 
-# Migration
-Execute the tables migration:
+# Setup
+## Development
+### Infrastructure
+Starting up system infrastructure
 ```sh
-npm run migrate:up
+cd infra-specs # Clone if not already
+docker-compose -f k8s/local/docker-compose.yml up --force-recreate # Create up all system infrastructures
 ```
-Note: Learn more related commands in the `package.json` file.
+### Service
+Starting up the `user-service`
+```sh
+cd user-service
+npm install # Install libraries
+npm run migrate:up # Migrate up all database migrations
+npm start # Start the service
+```
