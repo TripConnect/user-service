@@ -1,8 +1,8 @@
 import { ConsumerEachMessagePayload, Kafka } from "kafkajs";
 
-import KafkaInstance from "../kafka/index";
-import logger from "../../utils/logging";
-import User from "../../database/models/user";
+import KafkaInstance from "services/kafka/index";
+import User from "database/models/user";
+import logger from "utils/logging";
 
 type TopicResolver = {
     groupId: string,
