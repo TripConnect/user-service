@@ -6,7 +6,6 @@ export function getAccessToken(user: typeof User): string {
     let accessToken = jwt.sign(
         {
             userId: user.id,
-            username: user.username,
             avatar: user.avatar,
         },
         process.env.JWT_SECRET_KEY || ""
