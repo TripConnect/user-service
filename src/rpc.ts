@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import { Op } from 'sequelize';
 const grpc = require('@grpc/grpc-js');
 
-import User from './database/models/user';
-import UserCredential from './database/models/user_credential';
-import logger from './utils/logging';
-import { getAccessToken } from './utils/jwt';
-import { AuthPayload, UserInfo } from './utils/types';
+import User from 'database/models/user';
+import UserCredential from 'database/models/user_credential';
+import logger from 'utils/logging';
+import { getAccessToken } from 'utils/jwt';
+import { AuthPayload, UserInfo } from 'utils/types';
 
 export async function signIn(call: any, callback: any) {
     try {

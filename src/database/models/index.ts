@@ -1,9 +1,9 @@
 'use strict';
 
-import logger from "../../utils/logging";
+import logger from "utils/logging";
 
 const Sequelize = require('sequelize');
-const configs = require("./../config/config.js");
+const configs = require("database/config/config.js");
 const env = process.env.NODE_ENV || 'development';
 const db: { [key: string]: any; } = {};
 

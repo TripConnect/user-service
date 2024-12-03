@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import User from '../database/models/user';
+import User from 'database/models/user';
 
 export function getAccessToken(user: typeof User): string {
     let accessToken = jwt.sign(

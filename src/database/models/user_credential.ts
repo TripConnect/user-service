@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-import db from './index';
+import db from 'database/models/index';
 
 const UserCredential = db.sequelize.define('UserCredential', {
     user_id: {
