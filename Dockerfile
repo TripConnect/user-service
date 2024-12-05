@@ -11,6 +11,6 @@ COPY . .
 RUN npm run build
 RUN npm run migrate:up
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/application.js"]
 
 EXPOSE 31072
