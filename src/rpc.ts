@@ -25,9 +25,9 @@ export async function signIn(call: any, callback: any) {
         let signInResponse: AuthPayload = {
             userInfo: {
                 id: user.id,
-                username: user.username,
                 displayName: user.display_name,
                 avatar: user.avatar,
+                enabled2fa: user.enabled_2fa,
             },
             token: {
                 accessToken,
@@ -80,9 +80,9 @@ export async function signUp(call: any, callback: any) {
         let signUpResponse: AuthPayload = {
             userInfo: {
                 id: user.id,
-                username: user.username,
                 displayName: user.display_name,
                 avatar: user.avatar,
+                enabled2fa: user.enabled_2fa,
             },
             token: {
                 accessToken,
@@ -108,12 +108,16 @@ export async function findUser(call: any, callback: any) {
             });
             return;
         }
+
         let userResponse: UserInfo = {
             id: user.id,
-            username: user.username,
             avatar: user.avatar,
             displayName: user.display_name,
+            enabled2fa: user.enabled_2fa,
         };
+        console.log(userResponse);
+
+
         callback(null, userResponse);
     } catch (error: any) {
         logger.error(error.message);
