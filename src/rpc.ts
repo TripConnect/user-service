@@ -115,8 +115,6 @@ export async function findUser(call: any, callback: any) {
             displayName: user.display_name,
             enabled2fa: user.enabled_2fa,
         };
-        console.log(userResponse);
-
 
         callback(null, userResponse);
     } catch (error: any) {
