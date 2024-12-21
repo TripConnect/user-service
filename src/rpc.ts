@@ -23,17 +23,17 @@ export async function signIn(call: any, callback: any) {
         let refreshToken = "";
 
         let signInResponse: AuthPayload = {
-            userInfo: {
+            user_info: {
                 id: user.id,
-                displayName: user.display_name,
+                display_name: user.display_name,
                 avatar: user.avatar,
-                enabled2fa: user.enabled_2fa,
+                enabled_2fa: user.enabled_2fa,
             },
             token: {
-                accessToken,
-                refreshToken,
+                access_token: accessToken,
+                refresh_token: refreshToken,
             },
-        }
+        };
 
         callback(null, signInResponse);
     } catch (err: any) {
@@ -78,15 +78,15 @@ export async function signUp(call: any, callback: any) {
         let accessToken = getAccessToken(user);
 
         let signUpResponse: AuthPayload = {
-            userInfo: {
+            user_info: {
                 id: user.id,
-                displayName: user.display_name,
+                display_name: user.display_name,
                 avatar: user.avatar,
-                enabled2fa: user.enabled_2fa,
+                enabled_2fa: user.enabled_2fa,
             },
             token: {
-                accessToken,
-                refreshToken: "",
+                access_token: accessToken,
+                refresh_token: "",
             },
         };
 
@@ -99,7 +99,7 @@ export async function signUp(call: any, callback: any) {
 
 export async function findUser(call: any, callback: any) {
     try {
-        let { userId } = call.request;
+        let { user_id: userId } = call.request;
         let user = await User.findOne({ where: { id: userId } });
         if (!user) {
             callback({
@@ -112,8 +112,8 @@ export async function findUser(call: any, callback: any) {
         let userResponse: UserInfo = {
             id: user.id,
             avatar: user.avatar,
-            displayName: user.display_name,
-            enabled2fa: user.enabled_2fa,
+            display_name: user.display_name,
+            enabled_2fa: user.enabled_2fa,
         };
 
         callback(null, userResponse);
@@ -126,7 +126,7 @@ export async function findUser(call: any, callback: any) {
 
 export async function getUsers(call: any, callback: any) {
     try {
-        let { userIds } = call.request;
+        let { user_ids: userIds } = call.request;
         let users = await User.findAll({ where: { id: { [Op.in]: userIds } } });
         let usersResponse: { users: UserInfo[] } = {
             users: users.map((user: any) => ({
@@ -144,11 +144,14 @@ export async function getUsers(call: any, callback: any) {
 }
 
 export async function searchUser(call: any, callback: any) {
-    const DEFAULT_PAGE_SIZE = 100;
-    const DEFAULT_PAGE_NUMBER = 1;
-    let { term, pageNumber, pageSize } = call.request;
-    pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
-    pageSize = pageSize || DEFAULT_PAGE_SIZE;
+    let {
+        term,
+        page_number: pageNumber,
+        page_size: pageSize
+    } = call.request;
+
+    pageNumber = pageNumber || 1;
+    pageSize = pageSize || 100;
 
     try {
         let users = await User.findAll({

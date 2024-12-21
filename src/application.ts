@@ -22,7 +22,7 @@ const PORT = process.env.USER_SERVICE_PORT || 3107;
 
 function start() {
     const server = new grpc.Server();
-    server.addService(backendProto.User.service, rpcImplementations);
+    server.addService(backendProto.user_service.User.service, rpcImplementations);
     kafkaListener.listen();
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
