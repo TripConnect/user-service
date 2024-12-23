@@ -1,22 +1,11 @@
 import 'dotenv/config';
 
 const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
 
-import logger from 'utils/logging';
+import { backendProto } from 'common-utils';
 import * as rpcImplementations from 'rpc';
 import kafkaListener from 'services/kafka/listener';
-
-let packageDefinition = protoLoader.loadSync(
-    require.resolve('common-utils/protos/backend.proto'),
-    {
-        keepCase: true,
-        longs: String,
-        enums: String,
-        defaults: true,
-        oneofs: true
-    });
-let backendProto = grpc.loadPackageDefinition(packageDefinition).backend;
+import logger from 'utils/logging';
 
 const PORT = process.env.USER_SERVICE_PORT || 3107;
 

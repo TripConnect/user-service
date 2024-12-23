@@ -22,14 +22,6 @@
     "declaration": false,
     "downlevelIteration": true,
     "importHelpers": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "paths": {
-      "utils/*": [
-        "utils/*"
-      ],
-    },
   },
   "include": [
     "src/**/*"
