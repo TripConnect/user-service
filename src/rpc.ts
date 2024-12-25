@@ -99,7 +99,7 @@ export async function signUp(call: any, callback: any) {
 
 export async function findUser(call: any, callback: any) {
     try {
-        let { user_id: userId } = call.request;
+        let { userId } = call.request;
         let user = await User.findOne({ where: { id: userId } });
         if (!user) {
             callback({
@@ -126,7 +126,7 @@ export async function findUser(call: any, callback: any) {
 
 export async function getUsers(call: any, callback: any) {
     try {
-        let { user_ids: userIds } = call.request;
+        let { userIds } = call.request;
         let users = await User.findAll({ where: { id: { [Op.in]: userIds } } });
         let usersResponse: { users: UserInfo[] } = {
             users: users.map((user: any) => ({
@@ -146,8 +146,8 @@ export async function getUsers(call: any, callback: any) {
 export async function searchUser(call: any, callback: any) {
     let {
         term,
-        page_number: pageNumber,
-        page_size: pageSize
+        pageNumber,
+        pageSize
     } = call.request;
 
     pageNumber = pageNumber || 1;
