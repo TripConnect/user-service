@@ -1,18 +1,18 @@
 export type Token = {
-    access_token: string;
-    refresh_token: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export type UserInfo = {
     // public area
     id: string;
     avatar: string | null;
-    display_name: string;
+    displayName: string;
     // private area
-    enabled_2fa: boolean;
+    enabled2fa: boolean;
 }
 
 export type AuthPayload = {
-    user_info: UserInfo;
+    userInfo: UserInfo;
     token: Token;
 }
