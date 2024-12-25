@@ -1,12 +1,11 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
 const { Op } = require('sequelize');
 
 const users = [
   {
-    id: uuidv4(),
+    id: "00000000-0000-0000-0000-000000000001",
     display_name: "Sad Boy",
     username: "sadboy1999",
     password: "123456789",
@@ -14,7 +13,7 @@ const users = [
     updated_at: new Date(),
   },
   {
-    id: uuidv4(),
+    id: "00000000-0000-0000-0000-000000000002",
     display_name: "Sad Girl",
     username: "sadgirl1999",
     password: "123456789",
