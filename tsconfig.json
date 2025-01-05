@@ -21,7 +21,7 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
-    "importHelpers": true,
+    "importHelpers": true
   },
   "include": [
     "src/**/*"
