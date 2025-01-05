@@ -21,7 +21,22 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "paths": {
+      "rpc": [
+        "rpc"
+      ],
+      "services/*": [
+        "services/*"
+      ],
+      "database/*": [
+        "database/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ]
+    }
   },
   "include": [
     "src/**/*"
