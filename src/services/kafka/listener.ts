@@ -10,7 +10,7 @@ const resolvers: TopicResolver[] = [
         topic: 'user_updated_for_twofa',
         resolver: async ({ resourceId }) => {
             await User.update(
-                { enabled_2fa: true },
+                { enabled_twofa: true },
                 { where: { id: resourceId } }
             );
             logger.debug({ message: 'enabled 2fa successfully', resourceId });
