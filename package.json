@@ -43,6 +43,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/uuid": "^9.0.8",
+    "npm-check": "^6.0.1",
     "sequelize-cli": "^6.6.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
