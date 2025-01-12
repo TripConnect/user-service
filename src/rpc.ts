@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Op } from 'sequelize';
 const grpc = require('@grpc/grpc-js');
 
