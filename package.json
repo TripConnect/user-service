@@ -23,7 +23,7 @@
     "winston": "^3.13.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && node dist/application.js",
     "build": "tsc",
     "docker:build": "docker build -t user-service:latest .",
     "docker:run": "docker run --name user-service -p 31072:31072 user-service:latest",
