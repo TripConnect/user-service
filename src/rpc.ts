@@ -27,7 +27,7 @@ export async function signIn(call: any, callback: any) {
                 id: user.id,
                 displayName: user.display_name,
                 avatar: user.avatar,
-                enabled2fa: user.enabled_2fa,
+                enabledTwofa: user.enabled_twofa,
             },
             token: {
                 accessToken: accessToken,
@@ -82,7 +82,7 @@ export async function signUp(call: any, callback: any) {
                 id: user.id,
                 displayName: user.display_name,
                 avatar: user.avatar,
-                enabled2fa: user.enabled_2fa,
+                enabledTwofa: user.enabled_twofa,
             },
             token: {
                 accessToken: accessToken,
@@ -113,7 +113,7 @@ export async function findUser(call: any, callback: any) {
             id: user.id,
             avatar: user.avatar,
             displayName: user.display_name,
-            enabled2fa: user.enabled_2fa,
+            enabledTwofa: user.enabled_twofa,
         };
 
         callback(null, userResponse);
@@ -133,7 +133,7 @@ export async function getUsers(call: any, callback: any) {
                 id: user.id,
                 avatar: user.avatar,
                 displayName: user.display_name,
-                enabled2fa: user.enabled_2fa,
+                enabledTwofa: user.enabled_twofa,
             })),
         }
         callback(null, usersResponse);
@@ -167,7 +167,7 @@ export async function searchUser(call: any, callback: any) {
                 id: user.id,
                 avatar: user.avatar,
                 displayName: user.display_name,
-                enabled2fa: user.enabled_2fa,
+                enabledTwofa: user.enabled_twofa,
             })),
         };
 

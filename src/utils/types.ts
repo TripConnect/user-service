@@ -9,7 +9,7 @@ export type UserInfo = {
     avatar: string | null;
     displayName: string;
     // private area
-    enabled2fa: boolean;
+    enabledTwofa: boolean;
 }
 
 export type AuthPayload = {
