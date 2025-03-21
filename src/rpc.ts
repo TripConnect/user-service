@@ -3,10 +3,10 @@ import bcrypt from "bcryptjs";
 import { Op } from 'sequelize';
 const grpc = require('@grpc/grpc-js');
 
+import { TokenHelper } from 'common-utils';
 import User from 'database/models/user';
 import UserCredential from 'database/models/user_credential';
 import logger from 'utils/logging';
-import { getAccessToken } from 'utils/jwt';
 import { AuthPayload, UserInfo } from 'utils/types';
 
 export async function signIn(call: any, callback: any) {
@@ -19,7 +19,9 @@ export async function signIn(call: any, callback: any) {
         const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
         if (!isMatchedPassword) throw new Error("Password incorrect");
 
-        let accessToken = getAccessToken(user);
+        let accessToken = TokenHelper.sign({
+            userId: user.id
+        });
         let refreshToken = "";
 
         let signInResponse: AuthPayload = {
@@ -75,7 +77,9 @@ export async function signUp(call: any, callback: any) {
             credential: hashedPassword,
         });
 
-        let accessToken = getAccessToken(user);
+        let accessToken = TokenHelper.sign({
+            userId: user.id
+        });
 
         let signUpResponse: AuthPayload = {
             userInfo: {
