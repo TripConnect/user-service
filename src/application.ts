@@ -1,13 +1,12 @@
 import 'dotenv/config';
 
 const grpc = require('@grpc/grpc-js');
+import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 
-import { backendProto, ConfigHelper } from 'common-utils';
+import { backendProto, ConfigHelper, KafkaListener } from 'common-utils';
 import * as rpcImplementations from 'rpc';
 import { resolvers } from 'services/kafka/resolvers';
-import { KafkaListener } from 'common-utils';
 import logger from 'utils/logging';
-import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 
 function start() {
     const PORT = ConfigHelper.read("server.port") || 3107;
