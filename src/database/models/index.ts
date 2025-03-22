@@ -3,9 +3,9 @@
 import logger from "utils/logging";
 
 const Sequelize = require('sequelize');
-const configs = require("database/config/config.js");
+const configs = require("database/config/config");
 const env = process.env.NODE_ENV || 'development';
-const db: { [key: string]: any; } = {};
+const db: Record<string, any> = {};
 
 let activeConfig = configs[env];
 

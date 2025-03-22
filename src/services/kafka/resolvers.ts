@@ -1,10 +1,9 @@
-import { KafkaListener, TopicResolver } from 'common-utils';
+import { TopicResolver } from 'common-utils';
 
-import kafkaInstance from "services/kafka/index";
 import User from "database/models/user";
 import logger from "utils/logging";
 
-const resolvers: TopicResolver[] = [
+export const resolvers: TopicResolver[] = [
     {
         groupId: 'user-service-2fa',
         topic: 'user_updated_for_twofa',
@@ -17,5 +16,3 @@ const resolvers: TopicResolver[] = [
         },
     }
 ]
-
-export default new KafkaListener(kafkaInstance, resolvers);
