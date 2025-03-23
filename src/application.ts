@@ -2,18 +2,20 @@ import 'dotenv/config';
 
 const grpc = require('@grpc/grpc-js');
 import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
-
 import { backendProto, ConfigHelper, KafkaListener } from 'common-utils';
+
+ConfigHelper.load();
+
 import * as rpcImplementations from 'rpc';
 import { resolvers } from 'services/kafka/resolvers';
 import logger from 'utils/logging';
 
 function start() {
-    const PORT = ConfigHelper.read("server.port") || 3107;
+    const PORT = ConfigHelper.read("server.port");
 
     const kafkaInstance = new Kafka({
         clientId: 'user-service',
-        brokers: [`${ConfigHelper.read("kafka.host") || "localhost"}:${ConfigHelper.read("kafka.port") || 9092}`],
+        brokers: [`${ConfigHelper.read("kafka.host")}:${ConfigHelper.read("kafka.port")}`],
         logLevel: KafkaLogLevel.ERROR
     });
     const kafkaListener = new KafkaListener(kafkaInstance, resolvers);
@@ -29,5 +31,4 @@ function start() {
     });
 }
 
-ConfigHelper.init("user-service")
-    .then(() => start());
+start();
