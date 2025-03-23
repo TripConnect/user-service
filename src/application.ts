@@ -4,8 +4,6 @@ const grpc = require('@grpc/grpc-js');
 import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 import { backendProto, ConfigHelper, KafkaListener } from 'common-utils';
 
-ConfigHelper.load();
-
 import * as rpcImplementations from 'rpc';
 import { resolvers } from 'services/kafka/resolvers';
 import logger from 'utils/logging';

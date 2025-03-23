@@ -1,7 +1,5 @@
 const { ConfigHelper } = require("common-utils");
 
-ConfigHelper.load();
-
 module.exports = {
   "dialect": "mysql",
   "host": ConfigHelper.read("database.mysql.host"),

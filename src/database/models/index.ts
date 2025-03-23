@@ -3,8 +3,6 @@
 const Sequelize = require('sequelize');
 import { ConfigHelper } from "common-utils";
 
-ConfigHelper.load();
-
 const configs = require("database/config/config");
 import logger from "utils/logging";
 
