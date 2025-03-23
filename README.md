@@ -2,7 +2,7 @@
 The micro-service for user related functions
 
 # Setup
-## Development
+## Local
 ### Infrastructure
 Starting up system infrastructure
 ```sh
