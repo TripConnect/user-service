@@ -154,8 +154,8 @@ export async function searchUser(call: any, callback: any) {
         pageSize
     } = call.request;
 
-    pageNumber = pageNumber || 1;
-    pageSize = pageSize || 100;
+    pageNumber = pageNumber || 0;
+    pageSize = pageSize || 20;
 
     try {
         let users = await User.findAll({
@@ -163,7 +163,7 @@ export async function searchUser(call: any, callback: any) {
                 display_name: { [Op.like]: `%${term}%` }
             },
             limit: pageSize,
-            offset: (pageNumber - 1) * pageSize,
+            offset: pageNumber * pageSize,
         });
 
         let usersResponse: { users: UserInfo[] } = {
