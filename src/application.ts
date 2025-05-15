@@ -13,7 +13,7 @@ function start() {
     const PORT = ConfigHelper.read("server.port");
 
     const kafkaInstance = new Kafka({
-        clientId: 'user-service',
+        clientId: process.env.SERVICE_NAME,
         brokers: [`${ConfigHelper.read("kafka.host")}:${ConfigHelper.read("kafka.port")}`],
         logLevel: KafkaLogLevel.ERROR
     });

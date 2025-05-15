@@ -5,7 +5,7 @@ import logger from "utils/logging";
 
 export const resolvers: TopicResolver[] = [
     {
-        groupId: 'user-service-2fa',
+        groupId: process.env.SERVICE_NAME || 'user-service',
         topic: 'user_updated_for_twofa',
         resolver: async ({ resourceId }) => {
             await User.update(
