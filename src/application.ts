@@ -1,10 +1,11 @@
 import 'dotenv/config';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
 import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
-import { backendProto, ConfigHelper, KafkaListener } from 'common-utils';
+import { ConfigHelper, KafkaListener } from 'common-utils';
+import { UserServiceService } from "common-utils/protos/defs/user_service_grpc_pb";
 
-import * as rpcImplementations from 'rpc';
+import { userServiceImp } from 'grpc.server';
 import { resolvers } from 'services/kafka/resolvers';
 import logger from 'utils/logging';
 
@@ -20,7 +21,8 @@ function start() {
     kafkaListener.listen();
 
     const server = new grpc.Server();
-    server.addService(backendProto.user_service.UserService.service, rpcImplementations);
+    server.addService(UserServiceService, userServiceImp);
+
     server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
         if (err != null) {
             return logger.error(err);
