@@ -23,7 +23,7 @@ function start() {
     const server = new grpc.Server();
     server.addService(UserServiceService, userServiceImp);
 
-    server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err: any, port: any) => {
+    server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err != null) {
             return logger.error(err);
         }
