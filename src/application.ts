@@ -3,11 +3,11 @@ import 'dotenv/config';
 import * as grpc from '@grpc/grpc-js';
 import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 import { ConfigHelper, KafkaListener } from 'common-utils';
-import { UserServiceService } from "common-utils/protos/defs/user_service_grpc_pb";
 
 import { userServiceImp } from 'grpc.server';
 import { resolvers } from 'services/kafka/resolvers';
 import logger from 'utils/logging';
+import { UserServiceService } from "node-proto-lib/protos/user_service_grpc_pb";
 
 function start() {
     const PORT = ConfigHelper.read("server.port");
