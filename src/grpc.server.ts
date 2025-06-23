@@ -1,6 +1,6 @@
 import { sendUnaryData, ServerUnaryCall } from "@grpc/grpc-js";
-import { IUserServiceServer } from "common-utils/protos/defs/user_service_grpc_pb";
-import { AuthenticatedInfo, FindUserRequest, GetUsersRequest, SearchUserRequest, SignInRequest, SignUpRequest, Token, UserInfo, UsersInfo } from "common-utils/protos/defs/user_service_pb";
+import { IUserServiceServer } from "node-proto-lib/protos/user_service_grpc_pb";
+import { AuthenticatedInfo, FindUserRequest, GetUsersRequest, SearchUserRequest, SignInRequest, SignUpRequest, Token, UserInfo, UsersInfo } from "node-proto-lib/protos/user_service_pb";
 import User from "database/models/user";
 import UserCredential from "database/models/user_credential";
 import bcrypt from "bcryptjs";
@@ -128,14 +128,14 @@ export const userServiceImp: IUserServiceServer = {
                 .setId(user.id)
                 .setDisplayName(user.display_name)
                 .setAvatar(user.avatar)
-                .setEnabledTwofa(user.enabled_twofa)
+                .setEnabledTwofa(user.enabled_twofa);
 
             callback(null, userResponse);
         } catch (error: any) {
+            console.log(error);
             logger.error(error.message);
             callback(error, null);
         }
-
     },
 
     getUsers: async function (
