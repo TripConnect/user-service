@@ -1,7 +1,6 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-import { ConfigHelper } from "common-utils";
 
 const configs = require("database/config/config");
 import logger from "utils/logging";
