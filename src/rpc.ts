@@ -4,11 +4,13 @@ import { AuthenticatedInfo, FindUserRequest, GetUsersRequest, SearchUserRequest,
 import User from "database/models/user";
 import UserCredential from "database/models/user_credential";
 import bcrypt from "bcryptjs";
-import { TokenHelper } from "common-utils";
+import {ConfigHelper, TokenHelper} from "common-utils";
 import { v4 as uuidv4 } from 'uuid';
 import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
+
+const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
 
 export const userServiceImp: IUserServiceServer = {
 
@@ -75,7 +77,7 @@ export const userServiceImp: IUserServiceServer = {
                 id: uuidv4(),
                 username,
                 display_name: displayName,
-                avatar: avatarUrl || null,
+                avatar: avatarUrl || DEFAULT_USER_AVATAR,
                 created_at: new Date(),
                 updated_at: new Date(),
             });

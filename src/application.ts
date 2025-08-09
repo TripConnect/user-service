@@ -4,7 +4,7 @@ import * as grpc from '@grpc/grpc-js';
 import { Kafka, logLevel as KafkaLogLevel } from 'kafkajs';
 import { ConfigHelper, KafkaListener } from 'common-utils';
 
-import { userServiceImp } from 'grpc.server';
+import { userServiceImp } from 'rpc';
 import { resolvers } from 'services/kafka/resolvers';
 import logger from 'utils/logging';
 import { UserServiceService } from "node-proto-lib/protos/user_service_grpc_pb";
