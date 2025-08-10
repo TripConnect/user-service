@@ -1,4 +1,4 @@
-import { TopicResolver } from 'common-utils';
+import {ConfigHelper, TopicResolver} from 'common-utils';
 
 import User from "database/models/user";
 import logger from "utils/logging";
@@ -6,7 +6,7 @@ import logger from "utils/logging";
 export const resolvers: TopicResolver[] = [
     {
         groupId: process.env.SERVICE_NAME || 'user-service',
-        topic: 'user_updated_for_twofa',
+        topic: ConfigHelper.read('kafka.topic.user-fct-enabled-2fa') as string,
         resolver: async ({ resourceId }) => {
             await User.update(
                 { enabled_twofa: true },
