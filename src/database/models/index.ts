@@ -14,6 +14,7 @@ const sequelize = new Sequelize({
   password: configs.password,
   database: configs.database,
   models: [User, UserCredential],
+  repositoryMode: true,
 });
 
 (async () => {
