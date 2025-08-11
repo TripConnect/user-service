@@ -8,6 +8,8 @@
     "@grpc/grpc-js-xds": "^1.10.0",
     "@grpc/proto-loader": "^0.6.0",
     "@grpc/reflection": "^1.0.0",
+    "@type-cacheable/core": "^14.1.0",
+    "@type-cacheable/node-cache-adapter": "^14.1.0",
     "async": "^1.5.2",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",

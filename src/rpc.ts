@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
+import UserService from "./service";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
 
@@ -117,25 +118,23 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<UserInfo>) {
         try {
             let { userId } = call.request.toObject();
-            let user = await User.findOne({ where: { id: userId } });
-            if (!user) {
+            let userResponse = await UserService.findUser(userId);
+
+            if(!userResponse) {
                 callback({
                     code: grpc.status.NOT_FOUND,
-                    message: 'User not found'
+                    message: grpc.status.NOT_FOUND.toString(),
                 });
                 return;
             }
 
-            let userResponse = new UserInfo()
-                .setId(user.id)
-                .setDisplayName(user.display_name)
-                .setAvatar(user.avatar)
-                .setEnabledTwofa(user.enabled_twofa);
-
             callback(null, userResponse);
         } catch (error: any) {
-            console.log(error);
             logger.error(error.message);
+            callback({
+                code: grpc.status.INTERNAL,
+                message: grpc.status.INTERNAL.toString(),
+            });
             callback(error, null);
         }
     },
