@@ -147,7 +147,7 @@ export const userServiceImp: IUserServiceServer = {
         try {
             let { userIdsList } = call.request.toObject();
             let users = await User.findAll({ where: { id: { [Op.in]: userIdsList } } });
-            let usersInfo: UserInfo[] = users.map((user: any) => new UserInfo()
+            let usersInfo: UserInfo[] = users.map(user => new UserInfo()
                 .setId(user.id)
                 .setDisplayName(user.display_name)
                 .setAvatar(user.avatar)
