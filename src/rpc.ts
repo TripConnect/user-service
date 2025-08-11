@@ -24,6 +24,8 @@ export const userServiceImp: IUserServiceServer = {
             if (!user) throw new Error("User not found");
 
             let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
+            if(!userCredential) throw new Error("User credential does not exist");
+
             const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
             if (!isMatchedPassword) throw new Error("Password incorrect");
 

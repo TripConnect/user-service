@@ -1,20 +1,28 @@
 'use strict';
 
-const Sequelize = require('sequelize');
+import { Sequelize } from 'sequelize-typescript';
 
-const configs = require("database/config/config");
+import configs from "database/config/config";
 import logger from "utils/logging";
+import User from "./user";
+import UserCredential from "./user_credential";
 
-const db: Record<string, any> = {};
-db.sequelize = new Sequelize(configs.database, configs.username, configs.password, configs);
+const sequelize = new Sequelize({
+  dialect: 'mysql',
+  host: configs.host,
+  username: configs.username,
+  password: configs.password,
+  database: configs.database,
+  models: [User, UserCredential],
+});
 
 (async () => {
     try {
-        await db.sequelize.authenticate();
+        await sequelize.authenticate();
         logger.info('Connection has been established successfully.');
     } catch (error) {
         logger.error('Unable to connect to the database:', error);
     }
 })();
 
-export default db;
+export default sequelize;

@@ -1,19 +1,12 @@
-import { DataTypes } from 'sequelize';
-
-import db from 'database/models/index';
-
-const UserCredential = db.sequelize.define('UserCredential', {
-    user_id: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    credential: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-}, {
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
+@Table({
     tableName: 'user_credential',
     timestamps: false,
-});
+})
+export default class UserCredential extends Model {
+    @Column({ type: DataType.STRING, primaryKey: true })
+    declare user_id: string;
 
-export default UserCredential;
+    @Column({ type: DataType.STRING })
+    credential!: string;
+}
