@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
-import UserService from "./services/user";
+import userService from "./services/user";
 import {userCredentialRepository, userRepository} from "./repository";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
@@ -119,7 +119,7 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<UserInfo>) {
         try {
             let { userId } = call.request.toObject();
-            let userResponse = await UserService.findUser(userId);
+            let userResponse = await userService.findUser(userId);
 
             if(!userResponse) {
                 callback({
