@@ -21,10 +21,10 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<AuthenticatedInfo>) {
         try {
             let { username, password } = call.request.toObject();
-            let user = await User.findOne({ where: { username } });
+            let user = await userRepository.findOne({ where: { username } });
             if (!user) throw new Error("User not found");
 
-            let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
+            let userCredential = await userCredentialRepository.findOne({ where: { user_id: user.id } });
             if(!userCredential) throw new Error("User credential does not exist");
 
             const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
@@ -65,7 +65,7 @@ export const userServiceImp: IUserServiceServer = {
         try {
             let { username, password, displayName, avatarUrl } = call.request.toObject();
 
-            let existUser = await User.findOne({ where: { username } });
+            let existUser = await userRepository.findOne({ where: { username } });
             if (existUser) {
                 callback({
                     code: grpc.status.INVALID_ARGUMENT,
@@ -177,7 +177,7 @@ export const userServiceImp: IUserServiceServer = {
         pageSize = pageSize || 20;
 
         try {
-            let users = await User.findAll({
+            let users = await userRepository.findAll({
                 where: {
                     display_name: { [Op.like]: `%${term}%` }
                 },
