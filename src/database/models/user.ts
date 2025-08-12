@@ -14,26 +14,22 @@ export default class User extends Model {
     })
     declare id: string;
 
-    @NotNull
     @Column
     display_name!: string;
 
-    @NotNull
     @Column
     avatar!: string;
 
-    @NotNull
     @Unique
     @Column
     username!: string;
 
-    @NotNull
-    @Column
+    @Column({type: DataType.DATE})
     created_at!: Date;
 
     @Default(null)
     @AllowNull
-    @Column
+    @Column({type: DataType.DATE})
     updated_at: Date | null = null;
 
     @Default(false)

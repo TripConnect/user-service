@@ -13,7 +13,6 @@ export default class UserCredential extends Model {
     })
     user_id!: string;
 
-    @NotNull
     @Column
     credential!: string;
 }
