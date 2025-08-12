@@ -10,7 +10,7 @@ import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
 import UserService from "./service";
-import {USER_CRIDENTIAL_REPOSITORY, USER_REPOSITORY} from "./repository";
+import {userCredentialRepository, userRepository} from "./repository";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
 
@@ -77,7 +77,7 @@ export const userServiceImp: IUserServiceServer = {
             const salt = await bcrypt.genSalt(12);
             const hashedPassword = await bcrypt.hash(password, salt);
 
-            let user = await USER_REPOSITORY.create({
+            let user = await userRepository.create({
                 id: uuidv4(),
                 username,
                 display_name: displayName,
@@ -86,7 +86,7 @@ export const userServiceImp: IUserServiceServer = {
                 updated_at: new Date(),
             });
 
-            await USER_CRIDENTIAL_REPOSITORY.create({
+            await userCredentialRepository.create({
                 user_id: user.id,
                 credential: hashedPassword,
             });
@@ -147,7 +147,7 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<UsersInfo>) {
         try {
             let { userIdsList } = call.request.toObject();
-            let users = await USER_REPOSITORY.findAll({ where: { id: { [Op.in]: userIdsList } } });
+            let users = await userRepository.findAll({ where: { id: { [Op.in]: userIdsList } } });
             let usersInfo = users.map(user => new UserInfo()
                 .setId(user.id)
                 .setDisplayName(user.display_name)
