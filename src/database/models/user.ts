@@ -1,41 +1,28 @@
-import { DataTypes } from 'sequelize';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
-import db from 'database/models/index';
-
-const User = db.sequelize.define('User', {
-    id: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-        allowNull: false,
-    },
-    display_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    avatar: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    enabled_twofa: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-    }
-}, {
+@Table({
     tableName: 'user',
     timestamps: false,
-});
+})
+export default class User extends Model {
+    @Column({ type: DataType.STRING, primaryKey: true })
+    declare id: string;
 
-export default User;
+    @Column({ type: DataType.STRING })
+    display_name!: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    avatar!: string;
+
+    @Column({ type: DataType.STRING })
+    username!: string;
+
+    @Column({ type: DataType.DATE })
+    created_at!: Date;
+
+    @Column({ type: DataType.DATE })
+    updated_at!: Date;
+
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
+    enabled_twofa: boolean = false;
+}

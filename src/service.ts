@@ -1,8 +1,8 @@
 import {UserInfo} from "node-proto-lib/protos/user_service_pb";
-import User from "./database/models/user";
 import {Cacheable} from "@type-cacheable/core";
 import NodeCache from 'node-cache';
 import { useAdapter } from '@type-cacheable/node-cache-adapter';
+import {USER_REPOSITORY} from "./repository";
 
 const client = new NodeCache();
 const clientAdapter = useAdapter(client);
@@ -14,9 +14,8 @@ class UserService {
     ttlSeconds: 4 * 60 * 60,
   })
   public async findUser(userId: string): Promise<UserInfo | null> {
-    console.log("findUser", userId);
+    let user = await USER_REPOSITORY.findOne({ where: { id: userId } });
 
-    let user = await User.findOne({ where: { id: userId } });
     if (!user) return null;
 
     return new UserInfo()

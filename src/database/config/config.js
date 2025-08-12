@@ -1,6 +1,6 @@
-const { ConfigHelper } = require("common-utils");
+import {ConfigHelper} from "common-utils";
 
-module.exports = {
+export default {
   "dialect": "mysql",
   "host": ConfigHelper.read("database.mysql.host"),
   "username": ConfigHelper.read("database.mysql.username"),

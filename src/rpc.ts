@@ -10,6 +10,7 @@ import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
 import UserService from "./service";
+import {USER_CRIDENTIAL_REPOSITORY, USER_REPOSITORY} from "./repository";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
 
@@ -24,6 +25,8 @@ export const userServiceImp: IUserServiceServer = {
             if (!user) throw new Error("User not found");
 
             let userCredential = await UserCredential.findOne({ where: { user_id: user.id } });
+            if(!userCredential) throw new Error("User credential does not exist");
+
             const isMatchedPassword = await bcrypt.compare(password, userCredential.credential);
             if (!isMatchedPassword) throw new Error("Password incorrect");
 
@@ -74,7 +77,7 @@ export const userServiceImp: IUserServiceServer = {
             const salt = await bcrypt.genSalt(12);
             const hashedPassword = await bcrypt.hash(password, salt);
 
-            let user = await User.create({
+            let user = await USER_REPOSITORY.create({
                 id: uuidv4(),
                 username,
                 display_name: displayName,
@@ -83,7 +86,7 @@ export const userServiceImp: IUserServiceServer = {
                 updated_at: new Date(),
             });
 
-            let userCredential = await UserCredential.create({
+            await USER_CRIDENTIAL_REPOSITORY.create({
                 user_id: user.id,
                 credential: hashedPassword,
             });
@@ -144,8 +147,8 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<UsersInfo>) {
         try {
             let { userIdsList } = call.request.toObject();
-            let users = await User.findAll({ where: { id: { [Op.in]: userIdsList } } });
-            let usersInfo: UserInfo[] = users.map((user: any) => new UserInfo()
+            let users = await USER_REPOSITORY.findAll({ where: { id: { [Op.in]: userIdsList } } });
+            let usersInfo = users.map(user => new UserInfo()
                 .setId(user.id)
                 .setDisplayName(user.display_name)
                 .setAvatar(user.avatar)
