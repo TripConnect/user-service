@@ -33,6 +33,7 @@
     "docker:build": "docker build -t user-service:latest .",
     "docker:run": "docker run --name user-service -p 31072:31072 user-service:latest",
     "start": "ts-node src/application.ts",
+    "db:setup": "npx sequelize-cli db:create",
     "migrate:gen": "npx sequelize-cli model:generate --name Data --attributes name:string",
     "migrate:up": "npx sequelize-cli db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all",
