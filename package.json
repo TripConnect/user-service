@@ -8,6 +8,7 @@
     "@grpc/grpc-js-xds": "^1.10.0",
     "@grpc/proto-loader": "^0.6.0",
     "@grpc/reflection": "^1.0.0",
+    "@sequelize/postgres": "^7.0.0-alpha.46",
     "@type-cacheable/core": "^14.1.0",
     "@type-cacheable/node-cache-adapter": "^14.1.0",
     "async": "^1.5.2",

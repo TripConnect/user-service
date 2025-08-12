@@ -1,12 +1,19 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, PrimaryKey, NotNull} from 'sequelize-typescript';
+import {DataTypes} from "sequelize";
+
 @Table({
     tableName: 'user_credential',
     timestamps: false,
 })
 export default class UserCredential extends Model {
-    @Column({ type: DataType.STRING, primaryKey: true })
-    declare user_id: string;
+    @PrimaryKey
+    @Column({
+        type: DataTypes.UUID,
+        allowNull: false,
+    })
+    user_id!: string;
 
-    @Column({ type: DataType.STRING })
+    @NotNull
+    @Column
     credential!: string;
 }

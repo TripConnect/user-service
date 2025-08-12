@@ -6,13 +6,8 @@ module.exports = {
       .createTable(
         'user_credential',
         {
-          id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-          },
           user_id: {
+            primaryKey: true,
             allowNull: false,
             unique: true,
             type: Sequelize.STRING

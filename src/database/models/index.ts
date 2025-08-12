@@ -8,7 +8,7 @@ import User from "./user";
 import UserCredential from "./user_credential";
 
 const sequelize = new Sequelize({
-  dialect: 'mysql',
+  dialect: 'postgres',
   host: configs.host,
   username: configs.username,
   password: configs.password,

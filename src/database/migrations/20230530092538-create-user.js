@@ -6,9 +6,9 @@ module.exports = {
       'user',
       {
         id: {
-          allowNull: false,
-          unique: true,
           primaryKey: true,
+          unique: true,
+          allowNull: false,
           type: Sequelize.STRING
         },
         username: {

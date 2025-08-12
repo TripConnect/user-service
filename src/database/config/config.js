@@ -1,10 +1,10 @@
-import {ConfigHelper} from "common-utils";
+const { ConfigHelper } = require('common-utils');
 
-export default {
-  "dialect": "mysql",
-  "host": ConfigHelper.read("database.mysql.host"),
-  "username": ConfigHelper.read("database.mysql.username"),
-  "password": ConfigHelper.read("database.mysql.password"),
-  "database": ConfigHelper.read("database.mysql.database"),
-  "logging": false
+module.exports = {
+  dialect: 'postgres',
+  host: ConfigHelper.read('database.postgres.host'),
+  username: ConfigHelper.read('database.postgres.username'),
+  password: ConfigHelper.read('database.postgres.password'),
+  database: ConfigHelper.read('database.postgres.database'),
+  logging: false
 };

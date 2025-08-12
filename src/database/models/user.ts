@@ -1,28 +1,42 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, PrimaryKey, Default, Unique, NotNull, AllowNull} from 'sequelize-typescript';
+import {DataTypes} from "sequelize";
 
 @Table({
     tableName: 'user',
     timestamps: false,
 })
 export default class User extends Model {
-    @Column({ type: DataType.STRING, primaryKey: true })
+    @PrimaryKey
+    @Column({
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+    })
     declare id: string;
 
-    @Column({ type: DataType.STRING })
+    @NotNull
+    @Column
     display_name!: string;
 
-    @Column({ type: DataType.STRING, allowNull: true })
+    @NotNull
+    @Column
     avatar!: string;
 
-    @Column({ type: DataType.STRING })
+    @NotNull
+    @Unique
+    @Column
     username!: string;
 
-    @Column({ type: DataType.DATE })
+    @NotNull
+    @Column
     created_at!: Date;
 
-    @Column({ type: DataType.DATE })
-    updated_at!: Date;
+    @Default(null)
+    @AllowNull
+    @Column
+    updated_at: Date | null = null;
 
-    @Column({ type: DataType.BOOLEAN, defaultValue: false })
+    @Default(false)
+    @Column
     enabled_twofa: boolean = false;
 }
