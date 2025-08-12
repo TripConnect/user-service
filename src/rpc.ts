@@ -1,15 +1,13 @@
 import { sendUnaryData, ServerUnaryCall } from "@grpc/grpc-js";
 import { IUserServiceServer } from "node-proto-lib/protos/user_service_grpc_pb";
 import { AuthenticatedInfo, FindUserRequest, GetUsersRequest, SearchUserRequest, SignInRequest, SignUpRequest, Token, UserInfo, UsersInfo } from "node-proto-lib/protos/user_service_pb";
-import User from "database/models/user";
-import UserCredential from "database/models/user_credential";
 import bcrypt from "bcryptjs";
 import {ConfigHelper, TokenHelper} from "common-utils";
 import { v4 as uuidv4 } from 'uuid';
 import * as grpc from '@grpc/grpc-js';
 import logger from "utils/logging";
 import { Op } from "sequelize";
-import UserService from "./service";
+import UserService from "./services/user";
 import {userCredentialRepository, userRepository} from "./repository";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;

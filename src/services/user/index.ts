@@ -2,7 +2,7 @@ import {UserInfo} from "node-proto-lib/protos/user_service_pb";
 import {Cacheable} from "@type-cacheable/core";
 import NodeCache from 'node-cache';
 import { useAdapter } from '@type-cacheable/node-cache-adapter';
-import {userRepository} from "./repository";
+import { userRepository } from "repository";
 
 const client = new NodeCache();
 const clientAdapter = useAdapter(client);
