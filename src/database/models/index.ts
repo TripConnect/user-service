@@ -5,7 +5,7 @@ import { Sequelize } from 'sequelize-typescript';
 import configs from "database/config/config";
 import logger from "utils/logging";
 import User from "./user";
-import UserCredential from "./user_credential";
+import UserCredential from "./user-credential";
 
 const sequelize = new Sequelize({
   dialect: 'postgres',
