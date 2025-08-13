@@ -7,16 +7,18 @@ const users = [
   {
     id: "00000000-0000-0000-0000-000000000001",
     display_name: "Sad Boy",
-    username: "sadboy1999",
-    password: "123456789",
+    username: "ndtrong",
+    password: "ndtrong@1234",
+    avatar: "https://as2.ftcdn.net/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg",
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     id: "00000000-0000-0000-0000-000000000002",
     display_name: "Sad Girl",
-    username: "sadgirl1999",
-    password: "123456789",
+    username: "sadgirl",
+    password: "sadgirl@1234",
+    avatar: "https://as2.ftcdn.net/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg",
     created_at: new Date(),
     updated_at: new Date(),
   },
@@ -33,16 +35,18 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.bulkInsert('user', users.map(({ password, ...user }) => user)),
-        queryInterface.bulkInsert('user_credential', userCredentials),
-      ]);
+      ]).then((result) => {
+        return Promise.all([
+          queryInterface.bulkInsert('user_credential', userCredentials)
+        ]);
+      });
     });
   },
 
   async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
-        // Related user_credential rows will be removed automatically by user_id constraint
-        queryInterface.bulkDelete('user', { username: { [Op.in]: users.map(user => user.username) } }, {}),
+        queryInterface.bulkDelete('user', { id: { [Op.in]: users.map(user => user.id) } }, {}),
       ]);
     });
   }
