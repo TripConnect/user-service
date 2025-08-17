@@ -187,7 +187,7 @@ export const userServiceImp: IUserServiceServer = {
                 .setId(user.id)
                 .setDisplayName(user.display_name)
                 .setAvatar(user.avatar)
-                .setEnabledTwofa(user.enabled_twofa));;
+                .setEnabledTwofa(user.enabled_twofa));
 
             let usersResponse = new UsersInfo()
                 .setUsersList(usersList);
