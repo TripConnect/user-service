@@ -9,6 +9,7 @@ import logger from "utils/logging";
 import { Op } from "sequelize";
 import userService from "./services/user";
 import {userCredentialRepository, userRepository} from "./repository";
+import {raw} from "mysql2";
 
 const DEFAULT_USER_AVATAR = ConfigHelper.read('default-avatar.user') as string;
 
@@ -145,7 +146,12 @@ export const userServiceImp: IUserServiceServer = {
         callback: sendUnaryData<UsersInfo>) {
         try {
             let { userIdsList } = call.request.toObject();
-            let users = await userRepository.findAll({ where: { id: { [Op.in]: userIdsList } } });
+            let users = await userRepository.findAll({
+                where: {
+                    id: { [Op.in]: userIdsList }
+                },
+                raw: true,
+            });
             let usersInfo = users.map(user => new UserInfo()
                 .setId(user.id)
                 .setDisplayName(user.display_name)
@@ -181,9 +187,10 @@ export const userServiceImp: IUserServiceServer = {
                 },
                 limit: pageSize,
                 offset: pageNumber * pageSize,
+                raw: true,
             });
 
-            let usersList: UserInfo[] = users.map((user: any) => new UserInfo()
+            let usersList = users.map(user => new UserInfo()
                 .setId(user.id)
                 .setDisplayName(user.display_name)
                 .setAvatar(user.avatar)
