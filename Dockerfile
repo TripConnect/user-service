@@ -8,6 +8,6 @@ RUN npm install
 
 RUN npm run build
 
-CMD ["sh", "-c", "npm run migrate:up && node dist/application.js"]
+CMD ["sh", "-c", "npm run db:setup && npm run migrate:up && node dist/application.js"]
 
 EXPOSE 31072
