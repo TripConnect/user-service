@@ -14,7 +14,7 @@ import {
 } from "node-proto-lib/protos/user_service_pb";
 import bcrypt from "bcryptjs";
 import {ConfigHelper, TokenHelper} from "common-utils";
-import {v4 as uuidv4} from 'uuid';
+import {randomUUID} from "node:crypto";
 import logger from "utils/logging";
 import {Op} from "sequelize";
 import userService from "./services/user";
@@ -104,7 +104,7 @@ export const userServiceImp: IUserServiceServer = {
       const hashedPassword = await bcrypt.hash(password, salt);
 
       let user = await userRepository.create({
-        id: uuidv4(),
+        id: randomUUID(),
         username,
         display_name: displayName,
         avatar: avatarUrl || DEFAULT_USER_AVATAR,
